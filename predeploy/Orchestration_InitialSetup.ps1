@@ -222,8 +222,8 @@ function Generate-Cert() {
 ########################################################################################################################
 function orchestration {
 	Param(
-		[string]$environmentName = "AzureUSGovernment",
-		[string]$location = "USGov Virginia",
+		[string]$environmentName = "AzureCloud",
+		[string]$location = "canadacentral",
 		[Parameter(Mandatory=$true)]
 		[string]$subscriptionId,
 		[Parameter(Mandatory=$true)]
