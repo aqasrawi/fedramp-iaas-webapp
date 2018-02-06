@@ -6,10 +6,10 @@
         "value": "AzureCloud"
       },
       "keyVaultName": {
-        "value": "GCKeystoreAQ"
+        "value": "GCKeystoreUser01"
       },
       "keyVaultResourceGroupName": {
-        "value": "GCbluePrintAQ"
+        "value": "GCbluePrintUser01"
       },
         "configureSQLAO": {
             "value": "yes"
@@ -27,7 +27,7 @@
             "value": true
         },
         "adVMSize": {
-            "value": "Standard_D1_v2"
+            "value": "Standard_D2_v2"
         },
         "sqlVMSize": {
             "value": "Standard_D2_v2"
@@ -36,10 +36,10 @@
             "value": "Standard_D2_v2"
         },
         "mgtVMSize": {
-            "value": "Standard_D1_v2"
+            "value": "Standard_D2_v2"
         },
         "witnessVMSize": {
-            "value": "Standard_D1_v2"
+            "value": "Standard_D2_v2"
         },
         "sqlStorageAccountType": {
             "value": "Standard_GRS"
