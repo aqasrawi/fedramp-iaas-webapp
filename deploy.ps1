@@ -14,5 +14,9 @@ $parametersFile='.\azuredeploy.parameters.json'
 # Provision Basic Services / OMS Workspaces
 #
 New-AzureRmResourceGroupDeployment -Name "D_$timestamp" -ResourceGroupName $resourceGroupName `
--TemplateFile .\azuredeploy.json -TemplateParameterFile $parametersFile `
--Mode Incremental -Verbose 
+-TemplateFile .\azuredeploy01.json -TemplateParameterFile $parametersFile `
+-Mode Incremental
+
+New-AzureRmResourceGroupDeployment -Name "D_$timestamp" -ResourceGroupName $resourceGroupName `
+-TemplateFile .\azuredeploy02.json -TemplateParameterFile $parametersFile `
+-Mode Incremental
