@@ -9,7 +9,7 @@
         "description": "Assign the environment for Azure (Azure Commercial or Gov)"
       }
     },
-    "workspaceRegion": {
+    "omsWorkspaceRegion": {
       "type": "string",
       "metadata": {
         "description": "OMS region."
@@ -381,7 +381,7 @@
         "SQLAOProbe": "SQLAlwaysOnEndPointProbe",
       "omsSettings": {
         //"workspaceRegion": "[resourceGroup().location]",
-        "workspaceRegion": "[parameters('workspaceRegion')]",
+        "omsWorkspaceRegion": "[parameters('omsWorkspaceRegion')]",
         "serviceTier": "PerNode",
         "dataRetention": 365
       },
@@ -710,9 +710,9 @@
                     "omsWorkspaceName": {
                         "value": "[variables('resourceNames').omsWorkspace]"
                     },
-                    "omsWorkspaceRegion": {
-                        "value": "[variables('omsSettings').workspaceRegion]"
-                    },
+                  "omsWorkspaceRegion": {
+                    "value": "[variables('omsSettings').omsWorkspaceRegion]"
+                  },
                     "serviceTier": {
                         "value": "[variables('omsSettings').serviceTier]"
                     },

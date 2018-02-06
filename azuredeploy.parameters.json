@@ -5,7 +5,7 @@
     "environmentName": {
       "value": "AzureCloud"
     },
-    "workspaceRegion": {
+    "omsWorkspaceRegion": {
       "value": "canadacentral"
     },
     "keyVaultName": {
