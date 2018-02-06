@@ -269,7 +269,8 @@
           },
         "dependsOn": [
           "[resourceId('Microsoft.Network/networkInterfaces', parameters('adBDCNicName'))]",
-          "[concat('Microsoft.Compute/virtualMachines/', parameters('adPDCVMName'))]"
+          "[concat('Microsoft.Compute/virtualMachines/', parameters('adPDCVMName'))]",
+          "Microsoft.Resources/deployments/UpdatingDNStoPrimaryADVM"
         ],
           "properties": {
               "hardwareProfile": {

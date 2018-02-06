@@ -7,7 +7,7 @@
 $subscriptionId = '3a4af7b3-b7ac-463d-9940-1d80445961a8'
 Set-AzureRmContext -SubscriptionId $subscriptionId
 $timestamp = Get-Date -Format "yyyy-MM-dd_hh-mm-ss"
-$resourceGroupName = 'GCbluePrintUserAQ'
+$resourceGroupName = 'GCbluePrintAQ'
 $parametersFile='.\azuredeploy.parameters.json'
 
 #

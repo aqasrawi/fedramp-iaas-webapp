@@ -6,10 +6,10 @@
         "value": "AzureCloud"
       },
       "keyVaultName": {
-        "value": "GCKeystoreUserAQ"
+        "value": "GCKeystoreAQ"
       },
       "keyVaultResourceGroupName": {
-        "value": "GCbluePrintUserAQ"
+        "value": "GCbluePrintAQ"
       },
         "configureSQLAO": {
             "value": "yes"
