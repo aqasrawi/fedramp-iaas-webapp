@@ -267,9 +267,10 @@
           "tags": {
               "Project": "Blueprint"
           },
-          "dependsOn": [
-              "[resourceId('Microsoft.Network/networkInterfaces', parameters('adBDCNicName'))]"
-          ],
+        "dependsOn": [
+          "[resourceId('Microsoft.Network/networkInterfaces', parameters('adBDCNicName'))]",
+          "[concat('Microsoft.Compute/virtualMachines/', parameters('adPDCVMName'))]"
+        ],
           "properties": {
               "hardwareProfile": {
                   "vmSize": "[parameters('adVMSize')]"
