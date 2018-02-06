@@ -60,7 +60,8 @@ function loginToAzure {
 
 	$AzureAuthCreds = New-Object System.Management.Automation.PSCredential -ArgumentList @($global:azureUsername,$global:azurePassword)
 	$azureEnv = Get-AzureRmEnvironment -Name $EnvironmentName
-	Login-AzureRmAccount -EnvironmentName "AzureUSGovernment" -Credential $AzureAuthCreds
+	#Login-AzureRmAccount -EnvironmentName "AzureCloud" -Credential $AzureAuthCreds
+	Login-AzureRmAccount -EnvironmentName "AzureCloud" 
 
 	if($?) {
 		Write-Host "Login successful!"

@@ -4,7 +4,7 @@
     "parameters": {
         "environmentName": {
             "type": "string",
-            "defaultValue": "AzureUSGovernment",
+            "defaultValue": "AzureCloud",
             "metadata": {
                 "description": "Assign the environment for Azure (Azure Commercial or Gov)"
             }
@@ -367,64 +367,64 @@
         "staticIPWEBStart": 5,
         "RDPNAT": "RDP",
         "SQLAOProbe": "SQLAlwaysOnEndPointProbe",
-        "omsSettings": {
-          "workspaceRegion": "USGov Virginia",
-          "serviceTier": "PerNode",
-          "dataRetention": 365
+      "omsSettings": {
+        "workspaceRegion": "[resourceGroup().location]",
+        "serviceTier": "PerNode",
+        "dataRetention": 365
+      },
+      "vmSettings": {
+        "location": "[resourceGroup().location]",
+        "dc": {
+          "imagePublisher": "MicrosoftWindowsServer",
+          "imageOffer": "WindowsServer",
+          "imageSKU": "2016-Datacenter",
+          "ipAddressPDC": "10.200.0.5",
+          "ipAddressBDC": "10.200.0.6"
         },
-        "vmSettings": {
-            "location": "USGov Virginia",
-            "dc": {
-                "imagePublisher": "MicrosoftWindowsServer",
-                "imageOffer": "WindowsServer",
-                "imageSKU": "2016-Datacenter",
-                "ipAddressPDC": "10.200.0.5",
-                "ipAddressBDC": "10.200.0.6"
-            },
-            "sql": {
-                "imagePublisher": "MicrosoftSQLServer",
-                "imageOffer": "[parameters('sqlServerVersion')]",
-                "imageSKU": "Enterprise",
-                "autoPatchingEnable": true,
-                "autoPatchingDay": "Sunday",
-                "autoPatchingStartHour": "2",
-                "sqlAOListenerPort": "1433",
-                "sqlAOAGName": "alwayson-ag",
-                "workloadType": "GENERAL",
-                "sqlAOListenerName": "alwayson-ag-listener",
-                "sqlAOEPName": "[concat(variables('resourceNames').alwaysOnDnsPrefix,'-hadr')]",
-                "sharePath": "[concat(variables('resourceNames').alwaysOnDnsPrefix,'-fsw')]",
-                "clusterName": "[concat(variables('resourceNames').alwaysOnDnsPrefix,'-fc')]",
-                "sqlAutobackupRetentionPeriod": "2",
-                "numberOfDisks": "2",
-                "ipAddressSql0": "10.200.1.6",
-                "ipAddressSql1": "10.200.1.7",
-                "serviceAccountUsername": "sqlservice"
-            },
-            "sqlw": {
-                "imagePublisher": "MicrosoftWindowsServer",
-                "imageOffer": "WindowsServer",
-                "imageSKU": "2016-Datacenter",
-                "ipAddress": "10.200.1.8"
-            },
-            "web": {
-                "imagePublisher": "MicrosoftWindowsServer",
-                "imageOffer": "WindowsServer",
-                "imageSKU": "2016-Datacenter",
-                "staticIPWEBStart": 5,
-                "ipAddresses": [
-                    { "IpAddress": "10.200.2.5" },
-                    { "IpAddress": "10.200.2.6" }
-                ]
-            },
-            "mgt": {
-                "imagePublisher": "MicrosoftWindowsServer",
-                "imageOffer": "WindowsServer",
-                "imageSKU": "2016-Datacenter",
-                "ipAddress": "10.200.3.5"
-            },
-            "vmContainerName": "vhds"
+        "sql": {
+          "imagePublisher": "MicrosoftSQLServer",
+          "imageOffer": "[parameters('sqlServerVersion')]",
+          "imageSKU": "Enterprise",
+          "autoPatchingEnable": true,
+          "autoPatchingDay": "Sunday",
+          "autoPatchingStartHour": "2",
+          "sqlAOListenerPort": "1433",
+          "sqlAOAGName": "alwayson-ag",
+          "workloadType": "GENERAL",
+          "sqlAOListenerName": "alwayson-ag-listener",
+          "sqlAOEPName": "[concat(variables('resourceNames').alwaysOnDnsPrefix,'-hadr')]",
+          "sharePath": "[concat(variables('resourceNames').alwaysOnDnsPrefix,'-fsw')]",
+          "clusterName": "[concat(variables('resourceNames').alwaysOnDnsPrefix,'-fc')]",
+          "sqlAutobackupRetentionPeriod": "2",
+          "numberOfDisks": "2",
+          "ipAddressSql0": "10.200.1.6",
+          "ipAddressSql1": "10.200.1.7",
+          "serviceAccountUsername": "sqlservice"
         },
+        "sqlw": {
+          "imagePublisher": "MicrosoftWindowsServer",
+          "imageOffer": "WindowsServer",
+          "imageSKU": "2016-Datacenter",
+          "ipAddress": "10.200.1.8"
+        },
+        "web": {
+          "imagePublisher": "MicrosoftWindowsServer",
+          "imageOffer": "WindowsServer",
+          "imageSKU": "2016-Datacenter",
+          "staticIPWEBStart": 2,
+          "ipAddresses": [
+            { "IpAddress": "10.200.2.5" },
+            { "IpAddress": "10.200.2.6" }
+          ]
+        },
+        "mgt": {
+          "imagePublisher": "MicrosoftWindowsServer",
+          "imageOffer": "WindowsServer",
+          "imageSKU": "2016-Datacenter",
+          "ipAddress": "10.200.3.5"
+        },
+        "vmContainerName": "vhds"
+      },
         "VnetID": "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkNameWithSuffix'))]",
         "derivedIds": {
             "keyVaultUrl": "[concat('https://', parameters('keyVaultName') ,'.vault.usgovcloudapi.net/')]",
@@ -2077,234 +2077,6 @@
                     },
                     "computerIdList": {
                         "value": ""
-                    }
-                }
-            }
-        },
-        {
-            "name": "[concat('ConfigurationVMEncryption-', variables('resourceNames').vms.web, copyindex())]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
-            "dependsOn": [
-                  "ConfigureAutomationSchedules"
-            ],
-            "copy": {
-                "name": "encryptionSQLMGTLoop",
-                "count": "[variables('numberOfWebInstances')]"
-            },
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('vmEncryptionSettings').provisioningVMAzureDiskEncryptionUrl]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "vmName": {
-                        "value": "[concat(variables('resourceNames').vms.web, copyindex())]"
-                    },
-                    "keyVaultName": {
-                        "value": "[parameters('keyVaultName')]"
-                    },
-                    "vmEncryptionSettings": {
-                        "value": "[variables('vmEncryptionSettings')]"
-                    },
-                    "aadClientID": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[variables('vmEncryptionSettings').keyVaultId]"
-                            },
-                            "secretName": "aadClientID"
-                        }
-                    },
-                    "aadClientSecret": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[variables('vmEncryptionSettings').keyVaultId]"
-                            },
-                            "secretName": "aadClientSecret"
-                        }
-                    },
-                    "keyEncryptionKeyURL": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[variables('vmEncryptionSettings').keyVaultId]"
-                            },
-                            "secretName": "keyEncryptionKeyURL"
-                        }
-                    },
-                    "workspaceName": {
-                        "value": "[variables('resourceNames').omsWorkspace]"
-                    },
-                    "AutomationAccountName": {
-                        "value": "[variables('resourceNames').automationAccount]"
-                    },
-                    "EnvironmentName": {
-                        "value": "[parameters('EnvironmentName')]"
-                    },
-                    "ResourceGroupName": {
-                        "value": "[resourceGroup().name]"
-                    },
-                    "AzureUserName": {
-                        "value": "[parameters('AzureUserName')]"
-                    },
-                    "AzurePassword": {
-                        "value": "[parameters('AzurePassword')]"
-                    },
-                    "SubscriptionId": {
-                        "value": "[subscription().subscriptionId]"
-                    }
-                }
-            }
-        },
-        {
-            "name": "[concat('ConfigurationVMEncryption-', variables('vmNamesArrayAD').VMs[copyIndex()].Name)]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
-            "dependsOn": [
-                  "ConfigureAutomationSchedules",
-		  "[concat('ConfigurationVMEncryption-', variables('resourceNames').vms.web, copyindex())]"
-            ],
-            "copy": {
-                "name": "encryptionSQLMGTLoop",
-                "count": "[length(variables('vmNamesArrayAD').VMs)]"
-            },
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('vmEncryptionSettings').provisioningVMAzureDiskEncryptionUrl]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "vmName": {
-                        "value": "[variables('vmNamesArrayAD').VMs[copyIndex()].Name]"
-                    },
-                    "keyVaultName": {
-                        "value": "[parameters('keyVaultName')]"
-                    },
-                    "vmEncryptionSettings": {
-                        "value": "[variables('vmEncryptionSettings')]"
-                    },
-                    "aadClientID": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[variables('vmEncryptionSettings').keyVaultId]"
-                            },
-                            "secretName": "aadClientID"
-                        }
-                    },
-                    "aadClientSecret": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[variables('vmEncryptionSettings').keyVaultId]"
-                            },
-                            "secretName": "aadClientSecret"
-                        }
-                    },
-                    "keyEncryptionKeyURL": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[variables('vmEncryptionSettings').keyVaultId]"
-                            },
-                            "secretName": "keyEncryptionKeyURL"
-                        }
-                    },
-                    "workspaceName": {
-                        "value": "[variables('resourceNames').omsWorkspace]"
-                    },
-                    "AutomationAccountName": {
-                        "value": "[variables('resourceNames').automationAccount]"
-                    },
-                    "EnvironmentName": {
-                        "value": "[parameters('EnvironmentName')]"
-                    },
-                    "ResourceGroupName": {
-                        "value": "[resourceGroup().name]"
-                    },
-                    "AzureUserName": {
-                        "value": "[parameters('AzureUserName')]"
-                    },
-                    "AzurePassword": {
-                        "value": "[parameters('AzurePassword')]"
-                    },
-                    "SubscriptionId": {
-                        "value": "[subscription().subscriptionId]"
-                    }
-                }
-            }
-        },
-        {
-            "name": "[concat('ConfigurationVMEncryption-', variables('vmNamesArraySQLMGT').VMs[copyIndex()].Name)]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2015-01-01",
-            "dependsOn": [
-                  "ConfigureAutomationSchedules",
-		  "ConfigurationVMEncryption-AZ-PDC-VM",
-		  "ConfigurationVMEncryption-AZ-BDC-VM"
-            ],
-            "copy": {
-                "name": "encryptionSQLMGTLoop",
-                "count": "[length(variables('vmNamesArraySQLMGT').VMs)]"
-            },
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "uri": "[variables('vmEncryptionSettings').provisioningVMAzureDiskEncryptionUrl]",
-                    "contentVersion": "1.0.0.0"
-                },
-                "parameters": {
-                    "vmName": {
-                        "value": "[variables('vmNamesArraySQLMGT').VMs[copyIndex()].Name]"
-                    },
-                    "keyVaultName": {
-                        "value": "[parameters('keyVaultName')]"
-                    },
-                    "vmEncryptionSettings": {
-                        "value": "[variables('vmEncryptionSettings')]"
-                    },
-                    "aadClientID": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[variables('vmEncryptionSettings').keyVaultId]"
-                            },
-                            "secretName": "aadClientID"
-                        }
-                    },
-                    "aadClientSecret": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[variables('vmEncryptionSettings').keyVaultId]"
-                            },
-                            "secretName": "aadClientSecret"
-                        }
-                    },
-                    "keyEncryptionKeyURL": {
-                        "reference": {
-                            "keyVault": {
-                                "id": "[variables('vmEncryptionSettings').keyVaultId]"
-                            },
-                            "secretName": "keyEncryptionKeyURL"
-                        }
-                    },
-                    "workspaceName": {
-                        "value": "[variables('resourceNames').omsWorkspace]"
-                    },
-                    "AutomationAccountName": {
-                        "value": "[variables('resourceNames').automationAccount]"
-                    },
-                    "EnvironmentName": {
-                        "value": "[parameters('EnvironmentName')]"
-                    },
-                    "ResourceGroupName": {
-                        "value": "[resourceGroup().name]"
-                    },
-                    "AzureUserName": {
-                        "value": "[parameters('AzureUserName')]"
-                    },
-                    "AzurePassword": {
-                        "value": "[parameters('AzurePassword')]"
-                    },
-                    "SubscriptionId": {
-                        "value": "[subscription().subscriptionId]"
                     }
                 }
             }

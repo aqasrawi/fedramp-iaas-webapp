@@ -17,9 +17,9 @@
         "environmentPrefix": {
             "value": "prod"
         },
-        "numberOfWebInstances": {
-            "value": 2
-        },
+        //"numberOfWebInstances": {
+        //    "value": 2
+        //},
         "useExistingKek": {
             "value": "kek"
         },
