@@ -9,10 +9,10 @@
       "value": "canadacentral"
     },
     "keyVaultName": {
-      "value": "GCKeystoreUser01"
+      "value": "GCKeystoreUser02"
     },
     "keyVaultResourceGroupName": {
-      "value": "GCbluePrintUser01"
+      "value": "GCbluePrintUser02"
     },
     "configureSQLAO": {
       "value": "yes"
